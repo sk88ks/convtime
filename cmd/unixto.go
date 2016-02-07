@@ -28,7 +28,7 @@ const (
 
 var (
 	locationStr string
-	formatStr   string
+	toFormatStr string
 )
 
 func convertToTime(unixtimeStr string, location *time.Location, layout string) string {
@@ -59,7 +59,7 @@ var unixtoCmd = &cobra.Command{
 		}
 
 		for i := range args {
-			fmt.Printf(timeResTmpl, args[i], convertToTime(args[i], l, formatStr))
+			fmt.Printf(timeResTmpl, args[i], convertToTime(args[i], l, toFormatStr))
 		}
 
 	},
@@ -70,5 +70,5 @@ func init() {
 
 	//unixtoCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	unixtoCmd.Flags().StringVarP(&locationStr, "location", "l", "", "Location setting")
-	unixtoCmd.Flags().StringVarP(&formatStr, "format", "f", "", "Time expression layout format")
+	unixtoCmd.Flags().StringVarP(&toFormatStr, "format", "f", "", "Time expression layout format")
 }

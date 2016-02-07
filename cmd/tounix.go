@@ -25,12 +25,16 @@ const (
 	unixtimeResTmpl = "%s -> %d\n"
 )
 
+var (
+	fromFormatStr string
+)
+
 // tounixCmd represents the tounix command
 var tounixCmd = &cobra.Command{
 	Use:   "tounix",
 	Short: "Tounix convets time string to unixtime seconds from a given format",
 	Run: func(cmd *cobra.Command, args []string) {
-		layout := layoutMap[formatStr]
+		layout := layoutMap[fromFormatStr]
 		for i := range args {
 			t, _ := time.Parse(layout, args[i])
 			fmt.Printf(unixtimeResTmpl, args[i], t.Unix())
@@ -41,5 +45,5 @@ var tounixCmd = &cobra.Command{
 func init() {
 	RootCmd.AddCommand(tounixCmd)
 
-	unixtoCmd.Flags().StringVarP(&formatStr, "format", "f", "", "Time expression layout format")
+	tounixCmd.Flags().StringVarP(&fromFormatStr, "format", "f", "", "Time expression layout format")
 }
