@@ -16,32 +16,59 @@ package cmd
 
 import (
 	"fmt"
+	"strconv"
+	"time"
 
 	"github.com/spf13/cobra"
 )
 
+const (
+	timeResTmpl = "%s -> %s\n"
+)
+
 var (
 	locationStr string
+	formatStr   string
 )
+
+func convertToTime(unixtimeStr string, location *time.Location, layout string) string {
+	ut, err := strconv.ParseInt(unixtimeStr, 10, 64)
+	if err != nil {
+		return ""
+	}
+
+	l := layoutMap[layout]
+
+	t := time.Unix(ut, 0).In(location)
+	if l != "" {
+		return t.Format(l)
+	}
+	return t.String()
+}
 
 // unixtoCmd represents the unixto command
 var unixtoCmd = &cobra.Command{
 	Use:   "unixto",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Unitxto convets unixtime seconds to formatted time expression",
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(locationStr)
+		l, err := time.LoadLocation(locationStr)
+		if err != nil {
+			fmt.Println("Not found location")
+			return
+		}
+
+		for i := range args {
+			fmt.Printf(timeResTmpl, args[i], convertToTime(args[i], l, formatStr))
+		}
+
 	},
 }
 
 func init() {
 	RootCmd.AddCommand(unixtoCmd)
 
-	unixtoCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	//unixtoCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	unixtoCmd.Flags().StringVarP(&locationStr, "location", "l", "", "Location setting")
+	unixtoCmd.Flags().StringVarP(&formatStr, "format", "f", "", "Time expression layout format")
 }
