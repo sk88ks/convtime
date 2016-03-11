@@ -21,6 +21,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	mongohost string
+)
+
 // This represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
 	Use:   "convtime",
@@ -34,6 +38,11 @@ to quickly create a Cobra application.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	//	Run: func(cmd *cobra.Command, args []string) { },
+}
+
+func init() {
+	//RootCmd.Flags().StringVarP(&mongohost, "mongo", "m", "m", "mongo host")
+	RootCmd.PersistentFlags().StringVarP(&mongohost, "mongo", "m", "m", "mongo host")
 }
 
 // Execute adds all child commands to the root command sets flags appropriately.
